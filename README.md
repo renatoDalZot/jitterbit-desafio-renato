@@ -142,10 +142,10 @@ prioridade ao escopo do Desafio, com foco principal nas operações CRUD na arqu
 limpa e bem estruturada (seguindo princípios de DDD), swagger, migrations do Prisma e 
 modelagem do banco de dados e mapeamento correto de DTOs conforme especificação.
 
-Uma aplicação de backend natualmente deveria conter testes automatizados. Entretanto, 
+Uma aplicação de backend naturalmente deveria contar com testes automatizados. Entretanto, 
 uma vez que a API realiza operações básicas de CRUD, sem lógica de regras de negócio 
-(valida-se apenas a presença dos campos obrigatórios e o tipo), não se mostrou conveniente a estruturação de testes, especialmente unitários. 
-Além do mais, não há muito sentido em testar operações realizadas por dependências externas, como o Prisma, e que não possuem lógica de negócio própria. São softwares robustos que já contam com sua camada de controle de qualidade.
+(valida-se apenas a presença dos campos obrigatórios e o tipo), não se mostrou conveniente a estruturação de testes, especialmente unitários.  
+Além disso, honestamente, tenho atuado predominantemente com aplicações em Java, e a definição dos perfis de teste e de produção, com o Prisma ORM (dificuldades de alterar as variáveis de ambiente dentro do schema), para o contexto de aplicação dos testes integrados se mostrou uma tarefa complexa demais para a ocasião.
 
 
 ## Agradecimento
