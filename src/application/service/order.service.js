@@ -3,7 +3,7 @@ const { UpdateOrderDto } = require('../dto/update-order.dto');
 const { OrderResponseDto } = require('../dto/order-response.dto');
 const { OrderMapper } = require('../mapper/order.mapper');
 
-// Service de Pedido
+// Serviço de pedido
 class OrderService {
   constructor(orderRepository) {
     this.orderRepository = orderRepository;

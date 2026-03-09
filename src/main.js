@@ -1,7 +1,15 @@
+// Entrada do servidor
 require('dotenv').config();
 const express = require('express');
+
 const { OrderController } = require('./controller/order.controller');
 const { orderService } = require('./module/order.module');
+
+const { AuthController } = require('./controller/auth.controller');
+const { authService } = require('./module/auth.module');
+
+const { authMiddleware } = require('./middleware/auth.middleware');
+
 const { swaggerUi, swaggerSpec } = require('./config/swagger');
 
 const app = express();
@@ -15,18 +23,23 @@ app.get('/docs-json', (req, res) => {
   res.send(swaggerSpec);
 });
 
+const authController = new AuthController(authService);
+app.post('/auth/register', (req, res) => authController.register(req, res));
+app.post('/auth/login',    (req, res) => authController.login(req, res));
+app.get('/auth/me', authMiddleware, (req, res) => authController.me(req, res));
+
 const orderController = new OrderController(orderService);
 
-// Rotas de pedidos
-app.post('/order', (req, res) => orderController.create(req, res));
+// Rotas de pedidos (protegidas por autenticação)
+app.post('/order', authMiddleware, (req, res) => orderController.create(req, res));
 
-app.get('/order/list', (req, res) => orderController.findAll(req, res));
+app.get('/order/list', authMiddleware, (req, res) => orderController.findAll(req, res));
 
-app.get('/order/:orderId', (req, res) => orderController.findById(req, res));
+app.get('/order/:orderId', authMiddleware, (req, res) => orderController.findById(req, res));
 
-app.put('/order/:orderId', (req, res) => orderController.update(req, res));
+app.put('/order/:orderId', authMiddleware, (req, res) => orderController.update(req, res));
 
-app.delete('/order/:orderId', (req, res) => orderController.delete(req, res));
+app.delete('/order/:orderId', authMiddleware, (req, res) => orderController.delete(req, res));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -48,12 +61,7 @@ app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`API disponível em http://localhost:${PORT}`);
   console.log(`SWAGGER UI  http://localhost:${PORT}/docs`);
-  console.log(`   OPENAPI     http://localhost:${PORT}/docs-json`);
-  console.log(`   POST   http://localhost:${PORT}/order`);
-  console.log(`   GET    http://localhost:${PORT}/order/:orderId`);
-  console.log(`   GET    http://localhost:${PORT}/order/list`);
-  console.log(`   PUT    http://localhost:${PORT}/order/:orderId`);
-  console.log(`   DELETE http://localhost:${PORT}/order/:orderId`);
+  console.log(`OPENAPI     http://localhost:${PORT}/docs-json`);
 });
 
 process.on('SIGINT', async () => {

@@ -14,10 +14,85 @@ const swaggerSpec = {
     }
   ],
   tags: [
+    { name: 'Auth', description: 'Autenticacao e autorizacao' },
     { name: 'Order', description: 'Operacoes de pedidos' },
     { name: 'Health', description: 'Status da aplicacao' }
   ],
   paths: {
+    '/auth/register': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Registrar novo usuario',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/AuthInput' }
+            }
+          }
+        },
+        responses: {
+          201: {
+            description: 'Usuario registrado com sucesso',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AuthResponse' }
+              }
+            }
+          },
+          400: {
+            description: 'Erro de validacao'
+          }
+        }
+      }
+    },
+    '/auth/login': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Realizar login',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/AuthInput' }
+            }
+          }
+        },
+        responses: {
+          200: {
+            description: 'Login realizado com sucesso',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/AuthResponse' }
+              }
+            }
+          },
+          401: {
+            description: 'Credenciais invalidas'
+          }
+        }
+      }
+    },
+    '/auth/me': {
+      get: {
+        tags: ['Auth'],
+        summary: 'Obter dados do usuario autenticado',
+        security: [{ BearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'Dados do usuario',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/UserResponse' }
+              }
+            }
+          },
+          401: {
+            description: 'Token nao fornecido ou invalido'
+          }
+        }
+      }
+    },
     '/health': {
       get: {
         tags: ['Health'],
@@ -33,6 +108,7 @@ const swaggerSpec = {
       post: {
         tags: ['Order'],
         summary: 'Criar novo pedido',
+        security: [{ BearerAuth: [] }],
         requestBody: {
           required: true,
           content: {
@@ -52,6 +128,9 @@ const swaggerSpec = {
           },
           400: {
             description: 'Erro de validacao'
+          },
+          401: {
+            description: 'Token nao fornecido ou invalido'
           }
         }
       }
@@ -60,6 +139,7 @@ const swaggerSpec = {
       get: {
         tags: ['Order'],
         summary: 'Listar pedidos',
+        security: [{ BearerAuth: [] }],
         responses: {
           200: {
             description: 'Lista de pedidos',
@@ -71,6 +151,9 @@ const swaggerSpec = {
                 }
               }
             }
+          },
+          401: {
+            description: 'Token nao fornecido ou invalido'
           }
         }
       }
@@ -79,6 +162,7 @@ const swaggerSpec = {
       get: {
         tags: ['Order'],
         summary: 'Buscar pedido por ID',
+        security: [{ BearerAuth: [] }],
         parameters: [
           {
             name: 'orderId',
@@ -96,12 +180,16 @@ const swaggerSpec = {
               }
             }
           },
+          401: {
+            description: 'Token nao fornecido ou invalido'
+          },
           404: { description: 'Pedido nao encontrado' }
         }
       },
       put: {
         tags: ['Order'],
         summary: 'Atualizar pedido',
+        security: [{ BearerAuth: [] }],
         parameters: [
           {
             name: 'orderId',
@@ -120,12 +208,16 @@ const swaggerSpec = {
         },
         responses: {
           200: { description: 'Pedido atualizado' },
+          401: {
+            description: 'Token nao fornecido ou invalido'
+          },
           404: { description: 'Pedido nao encontrado' }
         }
       },
       delete: {
         tags: ['Order'],
         summary: 'Deletar pedido',
+        security: [{ BearerAuth: [] }],
         parameters: [
           {
             name: 'orderId',
@@ -136,13 +228,48 @@ const swaggerSpec = {
         ],
         responses: {
           200: { description: 'Pedido deletado' },
+          401: {
+            description: 'Token nao fornecido ou invalido'
+          },
           404: { description: 'Pedido nao encontrado' }
         }
       }
     }
   },
   components: {
+    securitySchemes: {
+      BearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Token JWT obtido atraves do login'
+      }
+    },
     schemas: {
+      AuthInput: {
+        type: 'object',
+        required: ['email', 'password'],
+        properties: {
+          email: { type: 'string', format: 'email', example: 'user@example.com' },
+          password: { type: 'string', example: 'senha123' }
+        }
+      },
+      AuthResponse: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
+          userId: { type: 'string', example: '123' },
+          email: { type: 'string', format: 'email', example: 'user@example.com' }
+        }
+      },
+      UserResponse: {
+        type: 'object',
+        properties: {
+          userId: { type: 'string', example: '123' },
+          email: { type: 'string', format: 'email', example: 'user@example.com' },
+          createdAt: { type: 'string', format: 'date-time' }
+        }
+      },
       CreateOrderItemInput: {
         type: 'object',
         required: ['idItem', 'quantidadeItem', 'valorItem'],
