@@ -15,6 +15,7 @@ Obrigado pela oportunidade!
 - [Endpoints da API](#endpoints-da-api)
 - [Autor](#autor)
 - [Licença](#licença)
+- [Observações do desenvolvedor (candidato)](#observações-do-desenvolvedor-candidato)
 - [Agradecimento](#agradecimento)
 
 ## Arquitetura do Projeto
@@ -135,13 +136,16 @@ MIT
 
 ## Observações do desenvolvedor (candidato)
 
-A implementação de autenticação JWT não foi incluída nesta entrega devido aos seguintes motivos:
-- Escopo do Desafio: o foco principal do desafio era implementar operações CRUD para gerenciamento de pedidos, e a autenticação não estava listada como requisito obrigatório na especificação
-- Complexidade Adicional: a implementação adequada de autenticação requereria criação de tabela adicional (`User`) no banco de dados, implementação de repositórios, serviços e controladores específicos, roles, permissões etc.
-- Priorização e Prazo: dado o prazo limitado para desenvolvimento, priorizei arquitetura limpa e bem estruturada (seguindo princípios de DDD), implementação completa do CRUD de pedidos, swagger, migrations do Prisma e modelagem do banco de dados e mapeamento correto de DTOs conforme especificação.
+Foi implementada uma autenticação básica JWT, não vinculada aos pedidos (qualquer usuário 
+registrado e logado pode consultar e alterar todos os pedidos). Isso porque foi dado 
+prioridade ao escopo do Desafio, com foco principal nas operações CRUD na arquitetura 
+limpa e bem estruturada (seguindo princípios de DDD), swagger, migrations do Prisma e 
+modelagem do banco de dados e mapeamento correto de DTOs conforme especificação.
 
-Não foram implementados testes automatizados, pois esta API realiza operações básicas de CRUD, sem lógica de regras de negócio (as operações são feitas basicamente pelas dependências importadas) e o foco principal foi a estruturação do projeto e a implementação dos endpoints, além do pequeno prazo concedido para desenvolvimento.
-Não há muito sentido em testar operações realizadas por dependências externas, como o Prisma, e que não possuem lógica de negócio própria. São softwares robustos que já contam com sua camada de controle de qualidade.
+Uma aplicação de backend natualmente deveria conter testes automatizados. Entretanto, 
+uma vez que a API realiza operações básicas de CRUD, sem lógica de regras de negócio 
+(valida-se apenas a presença dos campos obrigatórios e o tipo), não se mostrou conveniente a estruturação de testes, especialmente unitários. 
+Além do mais, não há muito sentido em testar operações realizadas por dependências externas, como o Prisma, e que não possuem lógica de negócio própria. São softwares robustos que já contam com sua camada de controle de qualidade.
 
 
 ## Agradecimento

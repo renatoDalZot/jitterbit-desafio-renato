@@ -23,7 +23,6 @@
   "author": "Renato Dal Zot",
   "license": "MIT",
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
     "jest": "^30.2.0",
     "nodemon": "^3.1.14",
     "prisma": "^7.4.2"
