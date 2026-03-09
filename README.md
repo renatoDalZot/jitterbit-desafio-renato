@@ -97,6 +97,11 @@ npm run prisma:migrate
 npm run prisma:generate
 ```
 
+### 6. Deploy das migrations
+```bash
+npm run prisma:deploy
+```
+
 ## Executar a aplicação
 
 ### Modo desenvolvimento (com recarregamento automático pós-alterações)
